@@ -16,7 +16,7 @@ migrate = Migrate(app, db)
 def get_all_heroes():
     try:
         heroes=Hero.query.all()
-        return jsonify([hero.Serialize() for hero in heroes]), 200
+        return jsonify([hero.to_dict() for hero in heroes]), 200
 
     except Exception as e:
         return jsonify({"error": "Failed to retrieve heroes", "message": str(e)}), 500 
@@ -55,7 +55,7 @@ def get_power_by_id(id):
     except Exception as e:
         return jsonify({"error": "Server error", "message": str(e)}), 500    
         
-#PATCH FOR POWERS/ID
+#PATCH(UPDATING) FOR POWERS/ID
 @app.route('/powers/<int:id>', methods=['PATCH'])
 def update_power_description(id):
     power = Power.query.get(id)
@@ -75,7 +75,7 @@ def update_power_description(id):
         return jsonify({"errors": [str(e)]}), 400  
 
 
-#POST FOR HEROPOWER
+#POST(ADDING) FOR HEROPOWER
 @app.route('/hero_powers', methods=['POST'])
 def create_hero_power():
     try:
@@ -108,8 +108,6 @@ def create_hero_power():
         return jsonify(response), 201
     except Exception as e:
         return jsonify({"errors": [str(e)]}), 400
-
-
 
 
 if __name__ == '__main__':

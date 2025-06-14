@@ -21,6 +21,7 @@ class HeroPower(db.Model, SerializerMixin):
     power=db.relationship("Power", back_populates='hero_powers')
 
     serialize_rules=('-hero.hero_powers', '-power.hero_powers') #Skip listing all hero_powers entirely
+    serialize_only = ('id', 'strength', 'hero_id', 'power_id', 'hero', 'power') 
 
     #Strength validation
     @property
@@ -47,6 +48,7 @@ class Hero (db.Model, SerializerMixin):
  
     #serialization
     serialize_rules=('-hero_powers.hero',) #Inside each HeroPower, skip its .hero
+    serialize_only = ('id', 'name', 'super_name')
 
    
 class Power(db.Model, SerializerMixin):
@@ -59,7 +61,8 @@ class Power(db.Model, SerializerMixin):
     hero_powers=db.relationship('HeroPower', back_populates='power', cascade="all, delete-orphan")
 
     #serialization
-    serialize_rules=('-hero_powers.power',) #Inside Power, skip .hero_powers
+    serialize_rules=('-hero_powers.power',) #Inside Power, skip .hero_powers skip nested powers
+    serialize_only = ('id', 'name', 'description') #keeps it clean
 
 
 #description validation
